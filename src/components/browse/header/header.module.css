@@ -1,0 +1,20 @@
+a {
+  text-decoration: none;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  grid-row: 1 / 1;
+  padding: 0 1rem;
+  background-color: #222222;
+  z-index: 1;
+  box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.75);
+}
+
+.logo {
+  font-size: 32px;
+  color: #f0e9e3;
+  cursor: pointer;
+}

@@ -1,0 +1,43 @@
+.scrollContainer {
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 5px 10px 0px 10px;
+}
+
+.favoritesOpen {
+  height: 170px;
+  background-color: #2d2f2dda;
+}
+
+.favoritesClosed {
+  max-height: 0;
+  overflow: hidden;
+}
+
+.favoritesToggle {
+  background-color: #3a3d3b;
+  cursor: pointer;
+  text-align: center;
+  box-shadow: 0px 2px 2px 0px black;
+}
+
+.favoritesToggle:hover {
+  background-color: #4a4d4b;
+}
+
+.icon {
+  padding: 3px 0;
+}
+
+.missing {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  color: #686b69;
+  width: 100%;
+}

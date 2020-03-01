@@ -1,0 +1,15 @@
+.about {
+  background-color: #434644;
+  color: #f5f0ec;
+}
+
+.icon {
+  height: 50px;
+  width: 50px;
+  font-size: 50px;
+  display: block;
+}
+
+.text {
+  margin-top: 1rem;
+}

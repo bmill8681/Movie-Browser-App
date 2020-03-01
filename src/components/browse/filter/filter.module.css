@@ -1,0 +1,21 @@
+.filter {
+  display: flex;
+  height: 100%;
+  flex-flow: column nowrap;
+  justify-content: center;
+  color: #f0e9e3;
+}
+
+.choiceContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-column-gap: 10px;
+  align-items: center;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  margin-top: 1rem;
+}

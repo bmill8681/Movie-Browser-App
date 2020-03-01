@@ -1,0 +1,75 @@
+.OuterWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-width: 320px;
+  height: 100%;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.25)),
+    url(./bg.png);
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-color: black;
+  position: relative;
+}
+
+.OuterWrapper::before {
+  content: 'Image From: https://w.wallhaven.cc/full/0w/wallhaven-0w2de6.jpg';
+  font-size: 0.75em;
+  color: rgba(255,255,255,0.3);
+  position: absolute;
+  bottom: 5px;
+  right: 50px
+}
+
+
+.InnerWrapper {
+  width: 50%;
+}
+
+.searchBox {
+  height: 50px;
+  font-size: 18px;
+}
+
+.label {
+  font-size: 42px;
+  color: #f0e9e3;
+  text-shadow: 3px 3px #0b3c48;
+}
+
+.button {
+  width: 120px;
+  padding: 20px;
+}
+
+.searchButton :hover {
+  cursor: default;
+}
+
+.Hide {
+  display: hidden;
+}
+
+@media only screen and (min-width: 600px) and (max-width: 750px){
+  .label {
+    font-size: 36px;
+  }
+  .InnerWrapper {
+    width: 100%;
+    padding: 0px 25px;
+  }
+}
+
+@media only screen and (max-width: 600px){
+  .label {
+    font-size: 28px;
+  }
+  .InnerWrapper {
+    width: 100%;
+    padding: 0px 25px;
+  }
+}

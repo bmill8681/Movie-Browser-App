@@ -1,0 +1,38 @@
+.favoriteItemContainer {
+  position: relative;
+}
+
+.poster {
+  border: 1px solid white;
+  margin: 0 2px;
+  cursor: pointer;
+}
+
+.close {
+  position: absolute;
+  top: 4px;
+  right: 5px;
+  width: 15px;
+  height: 15px;
+  background-color: rgb(0, 0, 0);
+  border: 1px solid gray;
+  z-index: 1;
+  cursor: default;
+}
+
+.close:hover {
+  border: 1px solid white;
+}
+
+.close:after {
+  position: absolute;
+  content: "\274c";
+  font-size: 10px;
+  color: #FFF;
+  line-height: 12px;
+  text-align: center;
+}
+
+.hidden {
+  visibility: hidden;
+}
