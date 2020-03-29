@@ -92,15 +92,15 @@ const sortMovieData = (movieData, fieldName, isSortedDescending) => {
 
   const sortRatings = (m1, m2) =>
     (isSortedDescending
-    ? m1[fieldName].average < m2[fieldName].average
-    : m1[fieldName].average > m2[fieldName].average)
+      ? m1[fieldName].average < m2[fieldName].average
+      : m1[fieldName].average > m2[fieldName].average)
       ? 1
       : -1;
 
   const sortOther = (m1, m2) =>
     (isSortedDescending
-    ? m1[fieldName] < m2[fieldName]
-    : m1[fieldName] > m2[fieldName])
+      ? m1[fieldName] < m2[fieldName]
+      : m1[fieldName] > m2[fieldName])
       ? 1
       : -1;
 
@@ -146,7 +146,8 @@ const MovieList = ({ movieFilter, setActiveMovie, addFavorite }) => {
   useEffect(() => {
     const fetchAndSetMovieData = async () => {
       const URL =
-        "https://www.randyconnolly.com/funwebdev/3rd/api/movie/movies-brief.php?id=ALL";
+        // "https://www.randyconnolly.com/funwebdev/3rd/api/movie/movies-brief.php?id=ALL";
+        "https://movie-browser-api.herokuapp.com/api/movies"
 
       const response = await fetch(URL);
 
@@ -235,7 +236,7 @@ const MovieList = ({ movieFilter, setActiveMovie, addFavorite }) => {
             <Image
               src={`https://image.tmdb.org/t/p/w${posterSize}${
                 movie[column.key]
-              }`}
+                }`}
               alt={movie.title}
               title={movie.title}
               height={posterSize}
@@ -340,17 +341,17 @@ const MovieList = ({ movieFilter, setActiveMovie, addFavorite }) => {
         listProps={{ usePageCache: true }}
       />
     ) : (
-      <div className={style.notFound}>
-        <Text variant={"xxLarge"}>No matching movies found.</Text>
-      </div>
-    )
+        <div className={style.notFound}>
+          <Text variant={"xxLarge"}>No matching movies found.</Text>
+        </div>
+      )
   ) : (
-    <div className={style.progressIndicator}>
-      <Stack vertical tokens={{ childrenGap: 50 }}>
-        {createShimmerBars(15)}
-      </Stack>
-    </div>
-  );
+      <div className={style.progressIndicator}>
+        <Stack vertical tokens={{ childrenGap: 50 }}>
+          {createShimmerBars(15)}
+        </Stack>
+      </div>
+    );
 };
 
 export default MovieList;
