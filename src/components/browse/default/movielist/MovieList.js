@@ -149,6 +149,12 @@ const MovieList = ({ movieFilter, setActiveMovie, addFavorite }) => {
         // "https://www.randyconnolly.com/funwebdev/3rd/api/movie/movies-brief.php?id=ALL";
         "https://movie-browser-api.herokuapp.com/api/movies"
 
+      const fetchOptions = {
+        method: 'POST',
+        headers: {
+          'authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiIwNDQ4ZjUxOTUyNDc1NjI1ZGY5Mzk0YmRhOTkwNDkxMiIsImlhdCI6MTU4NTUwMDM2M30.ostbfvpMKsvHTmUbWeMtFx361Sj2JpJdd3G3YNTNflE'
+        }
+      }
       const response = await fetch(URL);
 
       let movies = await response.json();
