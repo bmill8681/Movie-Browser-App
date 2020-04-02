@@ -155,7 +155,7 @@ const MovieList = ({ movieFilter, setActiveMovie, addFavorite }) => {
           'authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiIwNDQ4ZjUxOTUyNDc1NjI1ZGY5Mzk0YmRhOTkwNDkxMiIsImlhdCI6MTU4NTUwMDM2M30.ostbfvpMKsvHTmUbWeMtFx361Sj2JpJdd3G3YNTNflE'
         }
       }
-      const response = await fetch(URL);
+      const response = await fetch(URL, fetchOptions);
 
       let movies = await response.json();
       movies = sortMovieData(movies, "title", false);
