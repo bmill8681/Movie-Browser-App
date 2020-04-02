@@ -150,7 +150,7 @@ const MovieList = ({ movieFilter, setActiveMovie, addFavorite }) => {
         "https://movie-browser-api.herokuapp.com/api/movies"
 
       const fetchOptions = {
-        method: 'POST',
+        method: 'GET',
         headers: {
           'authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiIwNDQ4ZjUxOTUyNDc1NjI1ZGY5Mzk0YmRhOTkwNDkxMiIsImlhdCI6MTU4NTUwMDM2M30.ostbfvpMKsvHTmUbWeMtFx361Sj2JpJdd3G3YNTNflE'
         }
