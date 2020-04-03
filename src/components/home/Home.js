@@ -16,9 +16,18 @@ const Home = props => {
   const [searchTitle, setSearchTitle] = useState("");
   const [authorized, setAuth] = useState(false);
 
+  useEffect(() => {
+    if (localStorage.getItem('JWT')) {
+      setAuth(true);
+    }
+  }, [])
+
+  const setAuthorizedValue = val => {
+    setAuth(val);
+  }
   return (
     <main className={style.OuterWrapper}>
-      {!authorized ? <Login setAuthorized={setAuth} /> :
+      {!authorized ? <Login setAuthorized={setAuthorizedValue} /> :
         <Stack
           vertical
           tokens={{ childrenGap: 10 }}

@@ -19,7 +19,6 @@ const Login = props => {
     const postLogin = () => {
 
         const data = { email, password };
-        console.log(JSON.stringify(data))
         const url = "https://movie-browser-api.herokuapp.com/api/login";
         const opts = {
             method: "POST",
@@ -41,9 +40,9 @@ const Login = props => {
                     props.setAuthorized(true);
                 } else {
                     console.log('here');
+                    setFetching(false);
                     setErrorMessage("Invalid email or password.. use the placeholder text");
                 }
-                setFetching(false);
             })
             .catch(err => {
                 console.log(err);

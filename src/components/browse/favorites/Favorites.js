@@ -35,10 +35,10 @@ const Favorites = ({
               />
             ))
           ) : (
-            <Text variant={"xxLarge"} className={style.missing}>
-              How can you have any pudding if you don't eat yer meat?
-            </Text>
-          )}
+              <Text variant={"xxLarge"} className={style.missing}>
+                How can you have any pudding if you don't eat yer meat?
+              </Text>
+            )}
         </div>
       </section>
       <div className={style.favoritesToggle} onClick={() => toggleFavorites()}>
