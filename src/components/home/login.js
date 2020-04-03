@@ -16,18 +16,20 @@ const Login = props => {
     const [errorMessage, setErrorMessage] = useState("");
     const [fetching, setFetching] = useState(false);
 
-    const url = "https://movie-browser-api.herokuapp.com/api/login";
-    const opts = {
-        method: "POST",
-        headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Content-type': 'application/json',
-            mode: "cors"
-        }
-    }
     const postLogin = () => {
-        opts.body.email = email;
-        opts.body.password = password;
+
+        const data = { email, password };
+        console.log(JSON.stringify(data))
+        const url = "https://movie-browser-api.herokuapp.com/api/login";
+        const opts = {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Content-type': 'application/json',
+                mode: "cors"
+            }
+        }
 
         setFetching(true);
         fetch(url, opts)
@@ -42,7 +44,6 @@ const Login = props => {
                     setErrorMessage("Invalid email or password.. use the placeholder text");
                 }
                 setFetching(false);
-
             })
             .catch(err => {
                 console.log(err);
@@ -70,7 +71,8 @@ const Login = props => {
                     <PrimaryButton
                         styles={{ root: { margin: "10px", float: "right" } }}
                         disabled={fetching || email.trim() === "" || password.trim() === ""}
-                        onClick={() => postLogin()}>{fetching ? <Spinner size={SpinnerSize.small} /> : "Login"}</PrimaryButton>
+                        onClick={() => postLogin()}>{fetching ? <Spinner size={SpinnerSize.small} /> : "Login"}
+                    </PrimaryButton>
                 </section>
 
             </section>
