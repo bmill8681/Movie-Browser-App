@@ -13,7 +13,7 @@ import {
   Stack
 } from "office-ui-fabric-react";
 import { Text } from "office-ui-fabric-react/lib/Text";
-
+import { Redirect } from 'react-router-dom'
 // CSS
 import style from "./movielist.module.css";
 
@@ -142,6 +142,7 @@ const MovieList = ({ movieFilter, setActiveMovie, addFavorite }) => {
   const [movieData, setMovieData] = useState([]);
   const [filteredMovieData, setFilteredMovieData] = useState([]);
   const [columnData, setColumnData] = useState([]);
+  const [unauth, setUnauth] = useState(false);
 
   useEffect(() => {
     const fetchAndSetMovieData = async () => {
@@ -152,15 +153,18 @@ const MovieList = ({ movieFilter, setActiveMovie, addFavorite }) => {
       const fetchOptions = {
         method: 'GET',
         headers: {
-          'authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiIwNDQ4ZjUxOTUyNDc1NjI1ZGY5Mzk0YmRhOTkwNDkxMiIsImlhdCI6MTU4NTUwMDM2M30.ostbfvpMKsvHTmUbWeMtFx361Sj2JpJdd3G3YNTNflE'
+          'authorization': localStorage.getItem('JWT')
         }
       }
       const response = await fetch(URL, fetchOptions);
+      if (response.status !== 200) {
+        setUnauth(true);
+      }
 
       let movies = await response.json();
       movies = sortMovieData(movies, "title", false);
 
-      localStorage.setItem("movies", JSON.stringify(movies));
+      // localStorage.setItem("movies", JSON.stringify(movies));
 
       const columns = createColumns(movies);
 
@@ -335,7 +339,7 @@ const MovieList = ({ movieFilter, setActiveMovie, addFavorite }) => {
     setColumnData(sortedColumns);
   };
 
-  return movieData.length > 0 ? (
+  return movieData.length > 0 && !unauth ? (
     filteredMovieData.length > 0 ? (
       <DetailsList
         items={filteredMovieData}
@@ -351,13 +355,13 @@ const MovieList = ({ movieFilter, setActiveMovie, addFavorite }) => {
           <Text variant={"xxLarge"}>No matching movies found.</Text>
         </div>
       )
-  ) : (
-      <div className={style.progressIndicator}>
-        <Stack vertical tokens={{ childrenGap: 50 }}>
-          {createShimmerBars(15)}
-        </Stack>
-      </div>
-    );
+  ) : !unauth ? (
+    <div className={style.progressIndicator}>
+      <Stack vertical tokens={{ childrenGap: 50 }}>
+        {createShimmerBars(15)}
+      </Stack>
+    </div>
+  ) : <Redirect to="/" />;
 };
 
 export default MovieList;
