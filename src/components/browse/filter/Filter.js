@@ -368,7 +368,7 @@ const Filter = props => {
         onChange={(event, option) => setChoiceGroupRating(option.key)}
       />
       <div className={style.buttonContainer}>
-        <DefaultButton text="Apply" onClick={filterHandler} />
+        {/* <DefaultButton text="Apply" onClick={filterHandler} /> */}
         <DefaultButton text="Reset" onClick={resetHandler} />
       </div>
       <section style={{
