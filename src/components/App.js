@@ -31,7 +31,7 @@ function App() {
         key="/browse"
         exact
         path="/browse"
-        render={({ location }) => <Browse location={location} />}
+        render={({ location, searchByTitle }) => <Browse location={location} searchByTitle={searchByTitle} />}
       />
     </main>
   );

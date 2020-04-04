@@ -1,5 +1,5 @@
 // Frameworks
-import React from "react";
+import React, { useEffect } from "react";
 import { DefaultButton } from "office-ui-fabric-react";
 
 // Custom Components
@@ -30,19 +30,21 @@ const Default = props => {
             addFavorite={props.addFavorite}
           />
         ) : (
-          <section className={style.movieListContainer}>
-            <DefaultButton
-              text="Filter"
-              onClick={() => props.setSideBarOpen(!props.sideBarOpen)}
-              className={style.filterButton}
-            />
-            <MovieList
-              setActiveMovie={props.setActiveMovie}
-              addFavorite={props.addFavorite}
-              movieFilter={props.movieFilter}
-            />
-          </section>
-        )}
+            <section className={style.movieListContainer}>
+              <DefaultButton
+                text="Filter"
+                onClick={() => props.setSideBarOpen(!props.sideBarOpen)}
+                className={style.filterButton}
+              />
+              <MovieList
+                setActiveMovie={props.setActiveMovie}
+                addFavorite={props.addFavorite}
+                movieFilter={props.movieFilter}
+                searchByTitle={props.searchByTitle}
+                sampleFilterURL={props.sampleFilterURL}
+              />
+            </section>
+          )}
       </section>
     </main>
   );

@@ -12,7 +12,7 @@ import Filter from "./filter/Filter";
  * @param {*} props
  */
 const Browse = props => {
-  const url = "https://movie-browser-api.herokuapp.com/api/favorites";
+  const url = "https://movie-browser-api.herokuapp.com/api";
 
   const [favoritesOpen, setFavoritesOpen] = useState(false);
   const [favorites, setFavorites] = useState([]);
@@ -28,6 +28,62 @@ const Browse = props => {
     rating: null
   }));
 
+  const [sampleFilter, setSampleFilter] = useState(null);
+  const [sampleFilterURL, setSampleFilterURL] = useState({ url: "", opts: {} });
+
+  useEffect(() => {
+    async function filterTheMovies() {
+      await filterMovies();
+    }
+    if (sampleFilter !== null) filterTheMovies();
+
+  }, [sampleFilter]);
+
+  const getSampleFilterYears = year => {
+    switch (year.type) {
+      case "before":
+        return `0/${year.min}`
+      case "after":
+        return `${year.min}`
+      case "between":
+        return `${year.min}/${year.max}`
+    }
+  }
+
+  const getSampleFilterRatings = rating => {
+    switch (rating.type) {
+      case "above":
+        return `${rating.min}`
+      case "below":
+        return `0/${rating.min}`
+      case "between":
+        return `${rating.min}/${rating.max}`
+    }
+  }
+
+  function filterMovies() {
+    const opts = {
+      method: 'GET',
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-type': 'application/json',
+        mode: "cors",
+        'authorization': localStorage.getItem('JWT'),
+      }
+    }
+    let filterURL;
+    if (sampleFilter.year) {
+      filterURL = `${url}/find/year/${getSampleFilterYears(sampleFilter.year)}`
+    }
+    if (sampleFilter.title) {
+      filterURL = `${url}/find/title/${sampleFilter.title}`
+    }
+    if (sampleFilter.rating) {
+      filterURL = `${url}/find/rating/${getSampleFilterRatings(sampleFilter.rating)}`
+    }
+    setSampleFilterURL({ url: filterURL, opts })
+  }
+
   async function fetchFavorites() {
     let opts = {
       method: 'GET',
@@ -38,7 +94,7 @@ const Browse = props => {
         'authorization': localStorage.getItem('JWT'),
       }
     }
-    await fetch(url, opts)
+    await fetch(`${url}/favorites`, opts)
       .then(data => data.json())
       .then(response => {
         setFavorites(response.favorites);
@@ -144,7 +200,7 @@ const Browse = props => {
           closeButtonAriaLabel="Close"
           overlayProps={{ className: { backgroundColor: "rgba(0,0,0,0.6)" } }}
         >
-          <Filter setMovieFilter={setMovieFilter}></Filter>
+          <Filter setMovieFilter={setMovieFilter} setSampleFilter={setSampleFilter} searchByTitle={props.location.searchTitle}></Filter>
         </Panel>
         <Default
           sideBarOpen={sideBarOpen}
@@ -153,6 +209,8 @@ const Browse = props => {
           movieFilter={movieFilter}
           activeMovie={activeMovie}
           setActiveMovie={setActiveMovie}
+          searchByTitle={props.location.searchTitle}
+          sampleFilterURL={sampleFilterURL}
         />
       </section>
     </section>

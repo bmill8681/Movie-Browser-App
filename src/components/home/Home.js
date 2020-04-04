@@ -48,7 +48,7 @@ const Home = props => {
             <Link
               to={{
                 pathname: "/browse",
-                state: { searchTitle: searchTitle }
+                searchTitle
               }}
             >
               <DefaultButton text="Search" className={style.button} />

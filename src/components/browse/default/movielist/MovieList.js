@@ -30,6 +30,7 @@ const extractYear = str => {
 };
 
 const createColumns = movies => {
+  if (movies.length === 0) return;
   const columns = buildColumns(
     movies.map(m =>
       pick(m, [
@@ -138,17 +139,45 @@ const createShimmerBars = num => {
  *
  * @param {*} param0
  */
-const MovieList = ({ movieFilter, setActiveMovie, addFavorite }) => {
+const MovieList = ({ movieFilter, setActiveMovie, addFavorite, searchByTitle, sampleFilterURL }) => {
   const [movieData, setMovieData] = useState([]);
   const [filteredMovieData, setFilteredMovieData] = useState([]);
   const [columnData, setColumnData] = useState([]);
   const [unauth, setUnauth] = useState(false);
+  const [fetching, setFetching] = useState(false);
+
+  useEffect(() => {
+    const fetchAndSetSampleFilter = async (urlObject) => {
+
+      setFetching(true);
+      const response = await fetch(urlObject.url, urlObject.opts);
+      if (response.status !== 200) {
+        setUnauth(true);
+      }
+
+      let movies = await response.json();
+      setFetching(false);
+      movies = sortMovieData(movies, "title", false);
+
+      // localStorage.setItem("movies", JSON.stringify(movies));
+
+      const columns = createColumns(movies);
+
+      setMovieData(movies);
+      setFilteredMovieData(movies);
+      setColumnData(columns);
+    }
+
+    if (sampleFilterURL.url !== "") {
+      console.log(`Fetching from : ${sampleFilterURL.url}`)
+      fetchAndSetSampleFilter(sampleFilterURL);
+    }
+  }, [sampleFilterURL])
 
   useEffect(() => {
     const fetchAndSetMovieData = async () => {
-      const URL =
-        // "https://www.randyconnolly.com/funwebdev/3rd/api/movie/movies-brief.php?id=ALL";
-        "https://movie-browser-api.herokuapp.com/api/movies"
+      let URL =
+        "https://movie-browser-api.herokuapp.com"
 
       const fetchOptions = {
         method: 'GET',
@@ -156,6 +185,13 @@ const MovieList = ({ movieFilter, setActiveMovie, addFavorite }) => {
           'authorization': localStorage.getItem('JWT')
         }
       }
+      if (typeof searchByTitle === String && searchByTitle !== "") {
+        URL = `${URL}/api/find/title/${searchByTitle}`
+      } else {
+        URL = `${URL}/api/movies`;
+      }
+
+      setFetching(true);
       const response = await fetch(URL, fetchOptions);
       if (response.status !== 200) {
         setUnauth(true);
@@ -163,7 +199,7 @@ const MovieList = ({ movieFilter, setActiveMovie, addFavorite }) => {
 
       let movies = await response.json();
       movies = sortMovieData(movies, "title", false);
-
+      setFetching(false);
       // localStorage.setItem("movies", JSON.stringify(movies));
 
       const columns = createColumns(movies);
@@ -339,7 +375,7 @@ const MovieList = ({ movieFilter, setActiveMovie, addFavorite }) => {
     setColumnData(sortedColumns);
   };
 
-  return movieData.length > 0 && !unauth ? (
+  return !fetching && !unauth ? (
     filteredMovieData.length > 0 ? (
       <DetailsList
         items={filteredMovieData}

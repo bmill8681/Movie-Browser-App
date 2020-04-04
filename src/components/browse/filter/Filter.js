@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import style from "./filter.module.css";
 import { FontSizes } from "@uifabric/fluent-theme/lib/fluent/FluentType";
 import { Label } from "office-ui-fabric-react/lib/Label";
@@ -7,6 +7,7 @@ import { SearchBox } from "office-ui-fabric-react/lib/SearchBox";
 import { ChoiceGroup } from "office-ui-fabric-react/lib/ChoiceGroup";
 import { SpinButton } from "office-ui-fabric-react/lib/SpinButton";
 import { Dropdown } from "office-ui-fabric-react/lib/Dropdown";
+import { Text } from 'office-ui-fabric-react'
 import { DefaultButton } from "office-ui-fabric-react";
 
 const maxYear = new Date().getFullYear();
@@ -297,6 +298,43 @@ const Filter = props => {
     };
   };
 
+  const filterBytitles = () => {
+    props.setSampleFilter({
+      title: filterTitle
+    })
+  }
+  const filterByYears = () => {
+    props.setSampleFilter({
+      year: {
+        type:
+          choiceGroupYear === "beforeAfter"
+            ? dropDownOptionYear.key
+            : "between",
+        min:
+          choiceGroupYear === "beforeAfter" ? beforeAfterYear : betweenMinYear,
+        max: choiceGroupYear === "beforeAfter" ? null : betweenMaxYear
+      }
+    })
+  }
+
+  const filterByRatings = () => {
+    props.setSampleFilter({
+      rating: {
+        type:
+          choiceGroupRating === "aboveBelow"
+            ? dropDownOptionRating.key
+            : "between",
+        min:
+          choiceGroupRating === "aboveBelow"
+            ? aboveBelowRating
+            : betweenMinRating,
+        max: choiceGroupRating === "aboveBelow" ? null : betweenMaxRating
+      }
+    })
+  }
+
+
+
   return (
     <form className={style.movieFilter}>
       <Label
@@ -333,6 +371,23 @@ const Filter = props => {
         <DefaultButton text="Apply" onClick={filterHandler} />
         <DefaultButton text="Reset" onClick={resetHandler} />
       </div>
+      <section style={{
+        margin: "10px 0px",
+        display: "grid",
+        gridTemplateRows: "1fr 1fr",
+        gridGap: "5px"
+      }}>
+        <Text>Filter by (Demonstration Purposes): </Text>
+        <section style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr 1fr"
+        }}>
+          <DefaultButton text="Title" onClick={filterBytitles} />
+          <DefaultButton text="Year" onClick={filterByYears} />
+          <DefaultButton text="Rating" onClick={filterByRatings} />
+        </section>
+
+      </section>
     </form>
   );
 };
