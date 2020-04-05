@@ -68,11 +68,9 @@ const MovieDetail = props => {
       const data = await response.json();
       setFetching(false);
       setLoaded(true);
-      console.log(data[0])
       await setExtraDetails(data[0]);
 
     };
-    console.log(props.details);
     fetchAndSetExtraDetails();
   }, [props.details]);
 

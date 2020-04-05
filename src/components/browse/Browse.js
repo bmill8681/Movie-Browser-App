@@ -97,7 +97,6 @@ const Browse = props => {
     await fetch(`${url}/favorites`, opts)
       .then(data => data.json())
       .then(response => {
-        console.log(response.favorites);
         setFavorites(response.favorites);
       })
       .catch(err => console.error(err));
