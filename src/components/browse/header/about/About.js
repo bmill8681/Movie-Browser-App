@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, Redirect } from "react";
+import { Link as RouterLink } from "react-router-dom";
 import {
   DefaultButton,
   Dialog,
@@ -26,6 +27,10 @@ const About = props => {
   const closeHandler = () => setHideDialog(true);
   const openHandler = () => setHideDialog(false);
   const changeHandler = (event, option) => setOptionSelected(option.key);
+  const logoutHandler = () => {
+    localStorage.removeItem('JWT');
+    closeHandler();
+  }
 
   return (
     <div>
@@ -156,6 +161,9 @@ const About = props => {
         )}
         <DialogFooter>
           <DefaultButton onClick={closeHandler} text="Close" />
+          <RouterLink to="/" onClick={logoutHandler}>
+            <DefaultButton text="Logout" />
+          </RouterLink>
         </DialogFooter>
       </Dialog>
     </div>

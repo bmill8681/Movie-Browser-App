@@ -34,7 +34,6 @@ const Login = props => {
         fetch(url, opts)
             .then(data => data.json())
             .then(data => {
-                console.log(data);
                 if (data.jwt) {
                     localStorage.setItem('JWT', data.jwt);
                     props.setAuthorized(true);

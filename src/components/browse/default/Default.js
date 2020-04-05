@@ -1,5 +1,5 @@
 // Frameworks
-import React, { useEffect } from "react";
+import React from "react";
 import { DefaultButton } from "office-ui-fabric-react";
 
 // Custom Components
@@ -40,14 +40,14 @@ const Default = props => {
                 setActiveMovie={props.setActiveMovie}
                 addFavorite={props.addFavorite}
                 movieFilter={props.movieFilter}
-                searchByTitle={props.searchByTitle}
+                searchTitle={props.searchTitle}
                 sampleFilterURL={props.sampleFilterURL}
               />
             </section>
           )}
       </section>
     </main>
-  );
+  )
 };
 
 export default Default;

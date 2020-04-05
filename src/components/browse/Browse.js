@@ -81,6 +81,9 @@ const Browse = props => {
     if (sampleFilter.rating) {
       filterURL = `${url}/find/rating/${getSampleFilterRatings(sampleFilter.rating)}`
     }
+    if (sampleFilter.reset) {
+      filterURL = `${url}/movies`
+    }
     setSampleFilterURL({ url: filterURL, opts })
   }
 
@@ -192,7 +195,7 @@ const Browse = props => {
           movieFilter={movieFilter}
           activeMovie={activeMovie}
           setActiveMovie={setActiveMovie}
-          searchByTitle={props.location.searchTitle}
+          searchTitle={props.location.searchTitle}
           sampleFilterURL={sampleFilterURL}
         />
       </section>

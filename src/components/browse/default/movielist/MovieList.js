@@ -139,7 +139,7 @@ const createShimmerBars = num => {
  *
  * @param {*} param0
  */
-const MovieList = ({ movieFilter, setActiveMovie, addFavorite, searchByTitle, sampleFilterURL }) => {
+const MovieList = ({ movieFilter, setActiveMovie, addFavorite, searchTitle, sampleFilterURL }) => {
   const [movieData, setMovieData] = useState([]);
   const [filteredMovieData, setFilteredMovieData] = useState([]);
   const [columnData, setColumnData] = useState([]);
@@ -158,8 +158,6 @@ const MovieList = ({ movieFilter, setActiveMovie, addFavorite, searchByTitle, sa
       let movies = await response.json();
       setFetching(false);
       movies = sortMovieData(movies, "title", false);
-
-      // localStorage.setItem("movies", JSON.stringify(movies));
 
       const columns = createColumns(movies);
 
@@ -185,8 +183,8 @@ const MovieList = ({ movieFilter, setActiveMovie, addFavorite, searchByTitle, sa
           'authorization': localStorage.getItem('JWT')
         }
       }
-      if (typeof searchByTitle === String && searchByTitle !== "") {
-        URL = `${URL}/api/find/title/${searchByTitle}`
+      if (typeof searchTitle === "string" && searchTitle !== "") {
+        URL = `${URL}/api/find/title/${searchTitle}`
       } else {
         URL = `${URL}/api/movies`;
       }

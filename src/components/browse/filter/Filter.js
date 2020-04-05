@@ -333,6 +333,9 @@ const Filter = props => {
     })
   }
 
+  const fetchAll = () => {
+    props.setSampleFilter({ reset: true });
+  }
 
 
   return (
@@ -380,11 +383,13 @@ const Filter = props => {
         <Text>Filter by (Demonstration Purposes): </Text>
         <section style={{
           display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr"
+          gridTemplateColumns: "1fr 1fr 1fr",
+          gridGap: "5px"
         }}>
           <DefaultButton text="Title" onClick={filterBytitles} />
           <DefaultButton text="Year" onClick={filterByYears} />
           <DefaultButton text="Rating" onClick={filterByRatings} />
+          <DefaultButton text="Clear" onClick={fetchAll} />
         </section>
 
       </section>
