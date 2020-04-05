@@ -7,7 +7,9 @@ import {
   Label,
   Rating,
   Shimmer,
-  Text
+  Text,
+  Spinner,
+  SpinnerSize
 } from "office-ui-fabric-react";
 import { FontSizes } from "@uifabric/fluent-theme/lib/fluent/FluentType";
 // Modal
@@ -42,13 +44,14 @@ const MovieDetail = props => {
   const [hideDialog, setHideDialog] = useState(true);
   const [mobileCastView, setMobileCastView] = useState(true);
   const [auth, setAuth] = useState(true);
+  const [fetching, setFetching] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   const closeHandler = () => setHideDialog(true);
   const openHandler = () => setHideDialog(false);
 
   useEffect(() => {
     const fetchAndSetExtraDetails = async () => {
-      // const URL = `https://www.randyconnolly.com/funwebdev/3rd/api/movie/movies.php?id=${props.details.id}`;
       const URL = `https://movie-browser-api.herokuapp.com/api/movies/${props.details.id}`
       const opts = {
         method: 'GET',
@@ -56,18 +59,22 @@ const MovieDetail = props => {
           'authorization': localStorage.getItem('JWT')
         }
       }
+      setFetching(true);
+      setLoaded(false);
       const response = await fetch(URL, opts);
       if (!response.status === 200) {
         setAuth(false);
       }
       const data = await response.json();
-      console.log(data);
-      setExtraDetails(data[0]);
-    };
+      setFetching(false);
+      setLoaded(true);
+      console.log(data[0])
+      await setExtraDetails(data[0]);
 
+    };
+    console.log(props.details);
     fetchAndSetExtraDetails();
-    console.log("Fetched `extraDetails` from API.");
-  }, [props.details.id]);
+  }, [props.details]);
 
   useEffect(() => {
     const formatExtraDetails = () => {
@@ -213,28 +220,217 @@ const MovieDetail = props => {
     justifyContent: "center",
     alignItems: "center"
   };
+
   if (auth) {
-    return (
-      <>
-        <LargePoster
-          hideDialog={hideDialog}
-          closeHandler={closeHandler}
-          poster={props.details.poster}
-        />
-        <div className={styles.OuterWrapper}>
-          <CommandBar
-            items={mobileTabsLeft}
-            farItems={mobileTabsRight}
-            ariaLabel="Use left and right arrow keys to navigate between commands"
-            style={{
-              borderBottom: "1px solid #686b69"
-            }}
-            className={styles.mobileCommandBar}
+    if (fetching) {
+      return (
+        <Spinner size={SpinnerSize.large} />
+      )
+    } else if (loaded) {
+      return (
+        <>
+          <LargePoster
+            hideDialog={hideDialog}
+            closeHandler={closeHandler}
+            poster={props.details.poster}
           />
-          <div className={styles.mobile}>
-            <div
-              style={!mobileCastView ? { display: "none" } : { display: "block" }}
-            >
+          <div className={styles.OuterWrapper}>
+            <CommandBar
+              items={mobileTabsLeft}
+              farItems={mobileTabsRight}
+              ariaLabel="Use left and right arrow keys to navigate between commands"
+              style={{
+                borderBottom: "1px solid #686b69"
+              }}
+              className={styles.mobileCommandBar}
+            />
+            <div className={styles.mobile}>
+              <div
+                style={!mobileCastView ? { display: "none" } : { display: "block" }}
+              >
+                {castDetail ? (
+                  <CastDetail
+                    details={castDetail}
+                    close={() => setCastDetail(null)}
+                  />
+                ) : (
+                    <div className={styles.MovieDetailsWrapper}>
+                      <section className={styles.Poster}>
+                        <img
+                          src={`https://image.tmdb.org/t/p/w${posterSize}${props.details.poster}`}
+                          alt=""
+                          style={{
+                            width: "100%",
+                            height: "auto",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "flex-start"
+                          }}
+                          onClick={openHandler}
+                        />
+                      </section>
+                      <section className={styles.MovieDetails}>
+                        <header style={{ padding: "5px" }}>
+                          <Label
+                            style={{
+                              fontSize: FontSizes.size24,
+                              color: theme.palette.neutralPrimaryAlt,
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center"
+                            }}
+                          >
+                            {`${
+                              props.details.title
+                              } (${props.details.release_date.substring(0, 4)})`}
+                          </Label>
+                          <Text
+                            style={{
+                              fontSize: FontSizes.size16,
+                              color: theme.palette.neutralPrimaryAlt,
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center"
+                            }}
+                          >
+                            {props.details.tagline}
+                          </Text>
+                        </header>
+                        <section className={styles.MovieTags}>
+                          <MovieInfoItem title="Ratings">
+                            <Rating
+                              max={10}
+                              rating={
+                                Math.round(props.details.ratings.average * 2) / 2
+                              }
+                              readOnly={true}
+                              ariaLabelFormat={"Select {0} of {1} stars"}
+                              className={styles.rating}
+                              styles={{
+                                ratingStarBack: { color: "#4a4d4b" },
+                                ratingStarFront: { color: "rgb(121, 121, 0)" }
+                              }}
+                              onClick={() =>
+                                console.log(
+                                  Math.round(props.details.ratings.average * 2) / 2
+                                )
+                              }
+                            />
+                          </MovieInfoItem>
+                        </section>
+                        <section className={styles.MovieTags}>
+                          <MovieInfoItem
+                            title="Runtime"
+                            text={`${props.details.runtime}m`}
+                          />
+                          <MovieInfoItem
+                            title="Revenue"
+                            text={formatter.format(props.details.revenue)}
+                          />
+                          <MovieInfoItem
+                            title="Reviews"
+                            text={props.details.ratings.count}
+                          />
+                          <MovieInfoItem
+                            title="Popularity"
+                            text={parseFloat(
+                              props.details.ratings.popularity
+                            ).toFixed(2)}
+                          />
+                        </section>
+                        <section style={{ padding: "5px" }}>
+                          <Text>{props.details.overview}</Text>
+                        </section>
+                        <section className={styles.MovieTags}>
+                          <DefaultButton
+                            text="IMDB"
+                            href={`https://www.imdb.com/title/${props.details.imdb_id}`}
+                            target="_blank"
+                            style={buttonStyle}
+                          />
+                          <DefaultButton
+                            iconProps={{ iconName: "HeartFill" }}
+                            style={buttonStyle}
+                            styles={{ icon: { color: "rgb(202, 97, 97)" } }}
+                            onClick={() => props.addFavorite(props.details)}
+                          />
+                          <DefaultButton
+                            text="TMDB"
+                            href={`https://www.themoviedb.org/movie/${props.details.tmdb_id}`}
+                            target="_blank"
+                            style={buttonStyle}
+                          />
+                        </section>
+
+                        <Label>Genres</Label>
+                        {extraDetails ? (
+                          undefined
+                        ) : (
+                            <Shimmer width="100%" height="50px" />
+                          )}
+                        <section
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            flexWrap: "wrap"
+                          }}
+                        >
+                          {extraDetails && extraDetails.details.genres
+                            ? extraDetails.details.genres.map((cur, i) => (
+                              <MovieTag key={i} title={cur.name.toUpperCase()} />
+                            ))
+                            : undefined}
+                        </section>
+
+                        <Label>Keywords</Label>
+                        {extraDetails ? (
+                          undefined
+                        ) : (
+                            <Shimmer width="100%" height="50px" />
+                          )}
+                        <section
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            flexWrap: "wrap"
+                          }}
+                        >
+                          {extraDetails && extraDetails.details.keywords
+                            ? extraDetails.details.keywords.map((cur, i) => (
+                              <MovieTag key={i} title={cur.name.toUpperCase()} />
+                            ))
+                            : undefined}
+                        </section>
+                      </section>
+                    </div>
+                  )}
+              </div>
+              <div
+                style={mobileCastView ? { display: "none" } : { display: "block" }}
+              >
+                <div className={styles.CastDetailsWrapper}>
+                  <header className={styles.CastTabs}>
+                    <CommandBar
+                      items={tabs}
+                      ariaLabel="Use left and right arrow keys to navigate between commands"
+                      style={{
+                        borderBottom: "1px solid #686b69"
+                      }}
+                    />
+                  </header>
+                  <section
+                    style={{
+                      padding: "5px 0px",
+                      maxHeight: "100%",
+                      overflowY: "auto"
+                    }}
+                  >
+                    {extraDetails ? extras : <Shimmer width="100%" height="50px" />}
+                  </section>
+                </div>
+              </div>
+            </div>
+            <div className={styles.desktop}>
               {castDetail ? (
                 <CastDetail
                   details={castDetail}
@@ -287,9 +483,7 @@ const MovieDetail = props => {
                         <MovieInfoItem title="Ratings">
                           <Rating
                             max={10}
-                            rating={
-                              Math.round(props.details.ratings.average * 2) / 2
-                            }
+                            rating={Math.round(props.details.ratings.average * 2) / 2}
                             readOnly={true}
                             ariaLabelFormat={"Select {0} of {1} stars"}
                             className={styles.rating}
@@ -320,9 +514,9 @@ const MovieDetail = props => {
                         />
                         <MovieInfoItem
                           title="Popularity"
-                          text={parseFloat(
-                            props.details.ratings.popularity
-                          ).toFixed(2)}
+                          text={parseFloat(props.details.ratings.popularity).toFixed(
+                            2
+                          )}
                         />
                       </section>
                       <section style={{ padding: "5px" }}>
@@ -392,207 +586,31 @@ const MovieDetail = props => {
                   </div>
                 )}
             </div>
-            <div
-              style={mobileCastView ? { display: "none" } : { display: "block" }}
-            >
-              <div className={styles.CastDetailsWrapper}>
-                <header className={styles.CastTabs}>
-                  <CommandBar
-                    items={tabs}
-                    ariaLabel="Use left and right arrow keys to navigate between commands"
-                    style={{
-                      borderBottom: "1px solid #686b69"
-                    }}
-                  />
-                </header>
-                <section
+            <div className={styles.CastDetailsWrapperDesktop}>
+              <header className={styles.CastTabs}>
+                <CommandBar
+                  items={tabs}
+                  farItems={farTabs}
+                  ariaLabel="Use left and right arrow keys to navigate between commands"
                   style={{
-                    padding: "5px 0px",
-                    maxHeight: "100%",
-                    overflowY: "auto"
+                    borderBottom: "1px solid #686b69"
                   }}
-                >
-                  {extraDetails ? extras : <Shimmer width="100%" height="50px" />}
-                </section>
-              </div>
+                />
+              </header>
+              <section
+                style={{ padding: "5px 0px", maxHeight: "100%", overflowY: "auto" }}
+              >
+                {extraDetails ? extras : <Shimmer width="100%" height="50px" />}
+              </section>
             </div>
           </div>
-          <div className={styles.desktop}>
-            {castDetail ? (
-              <CastDetail
-                details={castDetail}
-                close={() => setCastDetail(null)}
-              />
-            ) : (
-                <div className={styles.MovieDetailsWrapper}>
-                  <section className={styles.Poster}>
-                    <img
-                      src={`https://image.tmdb.org/t/p/w${posterSize}${props.details.poster}`}
-                      alt=""
-                      style={{
-                        width: "100%",
-                        height: "auto",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "flex-start"
-                      }}
-                      onClick={openHandler}
-                    />
-                  </section>
-                  <section className={styles.MovieDetails}>
-                    <header style={{ padding: "5px" }}>
-                      <Label
-                        style={{
-                          fontSize: FontSizes.size24,
-                          color: theme.palette.neutralPrimaryAlt,
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center"
-                        }}
-                      >
-                        {`${
-                          props.details.title
-                          } (${props.details.release_date.substring(0, 4)})`}
-                      </Label>
-                      <Text
-                        style={{
-                          fontSize: FontSizes.size16,
-                          color: theme.palette.neutralPrimaryAlt,
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center"
-                        }}
-                      >
-                        {props.details.tagline}
-                      </Text>
-                    </header>
-                    <section className={styles.MovieTags}>
-                      <MovieInfoItem title="Ratings">
-                        <Rating
-                          max={10}
-                          rating={Math.round(props.details.ratings.average * 2) / 2}
-                          readOnly={true}
-                          ariaLabelFormat={"Select {0} of {1} stars"}
-                          className={styles.rating}
-                          styles={{
-                            ratingStarBack: { color: "#4a4d4b" },
-                            ratingStarFront: { color: "rgb(121, 121, 0)" }
-                          }}
-                          onClick={() =>
-                            console.log(
-                              Math.round(props.details.ratings.average * 2) / 2
-                            )
-                          }
-                        />
-                      </MovieInfoItem>
-                    </section>
-                    <section className={styles.MovieTags}>
-                      <MovieInfoItem
-                        title="Runtime"
-                        text={`${props.details.runtime}m`}
-                      />
-                      <MovieInfoItem
-                        title="Revenue"
-                        text={formatter.format(props.details.revenue)}
-                      />
-                      <MovieInfoItem
-                        title="Reviews"
-                        text={props.details.ratings.count}
-                      />
-                      <MovieInfoItem
-                        title="Popularity"
-                        text={parseFloat(props.details.ratings.popularity).toFixed(
-                          2
-                        )}
-                      />
-                    </section>
-                    <section style={{ padding: "5px" }}>
-                      <Text>{props.details.overview}</Text>
-                    </section>
-                    <section className={styles.MovieTags}>
-                      <DefaultButton
-                        text="IMDB"
-                        href={`https://www.imdb.com/title/${props.details.imdb_id}`}
-                        target="_blank"
-                        style={buttonStyle}
-                      />
-                      <DefaultButton
-                        iconProps={{ iconName: "HeartFill" }}
-                        style={buttonStyle}
-                        styles={{ icon: { color: "rgb(202, 97, 97)" } }}
-                        onClick={() => props.addFavorite(props.details)}
-                      />
-                      <DefaultButton
-                        text="TMDB"
-                        href={`https://www.themoviedb.org/movie/${props.details.tmdb_id}`}
-                        target="_blank"
-                        style={buttonStyle}
-                      />
-                    </section>
-
-                    <Label>Genres</Label>
-                    {extraDetails ? (
-                      undefined
-                    ) : (
-                        <Shimmer width="100%" height="50px" />
-                      )}
-                    <section
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        flexWrap: "wrap"
-                      }}
-                    >
-                      {extraDetails && extraDetails.details.genres
-                        ? extraDetails.details.genres.map((cur, i) => (
-                          <MovieTag key={i} title={cur.name.toUpperCase()} />
-                        ))
-                        : undefined}
-                    </section>
-
-                    <Label>Keywords</Label>
-                    {extraDetails ? (
-                      undefined
-                    ) : (
-                        <Shimmer width="100%" height="50px" />
-                      )}
-                    <section
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        flexWrap: "wrap"
-                      }}
-                    >
-                      {extraDetails && extraDetails.details.keywords
-                        ? extraDetails.details.keywords.map((cur, i) => (
-                          <MovieTag key={i} title={cur.name.toUpperCase()} />
-                        ))
-                        : undefined}
-                    </section>
-                  </section>
-                </div>
-              )}
-          </div>
-          <div className={styles.CastDetailsWrapperDesktop}>
-            <header className={styles.CastTabs}>
-              <CommandBar
-                items={tabs}
-                farItems={farTabs}
-                ariaLabel="Use left and right arrow keys to navigate between commands"
-                style={{
-                  borderBottom: "1px solid #686b69"
-                }}
-              />
-            </header>
-            <section
-              style={{ padding: "5px 0px", maxHeight: "100%", overflowY: "auto" }}
-            >
-              {extraDetails ? extras : <Shimmer width="100%" height="50px" />}
-            </section>
-          </div>
-        </div>
-      </>
-    )
+        </>
+      )
+    } else {
+      return (
+        <h1 onClick={() => console.log(props.details)}>Something went wrong...</h1>
+      )
+    }
   }
   else return (<Redirect to="/" />);
 };

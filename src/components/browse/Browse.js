@@ -97,6 +97,7 @@ const Browse = props => {
     await fetch(`${url}/favorites`, opts)
       .then(data => data.json())
       .then(response => {
+        console.log(response.favorites);
         setFavorites(response.favorites);
       })
       .catch(err => console.error(err));
@@ -110,15 +111,6 @@ const Browse = props => {
   }, []);
 
   const addFavorite = async (favorite) => {
-    // TODO
-    // Update this - should get the info from the API
-    // setFavorites(favorites => {
-    //   if (!favorites.some(movie => movie.id === favorite.id)) {
-    //     return [...favorites, favorite];
-    //   }
-
-    //   return favorites;
-    // });
     const opts = {
       method: "POST",
       body: JSON.stringify({ favorite: favorite.id }),
@@ -129,7 +121,7 @@ const Browse = props => {
         'authorization': localStorage.getItem('JWT'),
       }
     }
-    await fetch(url, opts)
+    await fetch(`${url}/favorites`, opts)
       .then(data => data.json())
       .then(response => {
         console.log(response);
@@ -148,7 +140,7 @@ const Browse = props => {
         'authorization': localStorage.getItem('JWT'),
       }
     }
-    await fetch(url, opts)
+    await fetch(`${url}/favorites`, opts)
       .then(data => data.json())
       .then(response => {
         if (response.success) {
@@ -159,14 +151,6 @@ const Browse = props => {
         else console.error(response.message)
       });
     await fetchFavorites();
-
-    // setFavorites(favorites => {
-    //   const copy = favorites.filter(movie => movie.id !== favorite.id);
-    //   if (copy.length === 0) {
-    //     setFavoritesOpen(false);
-    //   }
-    //   return copy;
-    // });
   };
 
   const toggleFavorites = () => {

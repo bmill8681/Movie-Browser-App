@@ -294,7 +294,7 @@ const MovieList = ({ movieFilter, setActiveMovie, addFavorite, searchByTitle, sa
               title="View Movie"
               ariaLabel="View Movie"
               checked={true}
-              onClick={() => setActiveMovie(movie)}
+              onClick={() => setActiveMovie(movie.id)}
               className={style.viewButton}
             />
             <IconButton

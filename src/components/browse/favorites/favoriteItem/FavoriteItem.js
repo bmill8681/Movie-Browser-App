@@ -43,7 +43,7 @@ const FavoriteItem = ({
             alt={movie.title}
             title={movie.title}
             className={style.poster}
-            onClick={() => setActiveMovie(movie.id)}
+            onClick={() => setActiveMovie(movie)}
             onMouseOver={() => setHidden(false)}
             onMouseLeave={() => setHidden(true)}
           />
