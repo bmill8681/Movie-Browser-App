@@ -36,7 +36,7 @@ const Favorites = ({
             ))
           ) : (
               <Text variant={"xxLarge"} className={style.missing}>
-                How can you have any pudding if you don't eat yer meat?
+                Nothing to see here... missing something? Please, refresh the browser.
               </Text>
             )}
         </div>
