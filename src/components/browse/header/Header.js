@@ -2,6 +2,7 @@ import React from "react";
 import style from "./header.module.css";
 import { Link } from "react-router-dom";
 import About from "./about/About";
+import Profile from './profile/Profile';
 import { Label, getTheme } from "office-ui-fabric-react";
 import { FontSizes } from "@uifabric/fluent-theme/lib/fluent/FluentType";
 
@@ -24,7 +25,10 @@ const Header = props => {
           Movie Browser
         </Label>
       </Link>
-      <About />
+      <section className={style.farButtons}>
+        <Profile />
+        <About />
+      </section>
     </section>
   );
 };

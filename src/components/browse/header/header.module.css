@@ -18,3 +18,8 @@ a {
   color: #f0e9e3;
   cursor: pointer;
 }
+
+.farButtons {
+  display: flex;
+  align-items: center;
+}
